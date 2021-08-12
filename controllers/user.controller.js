@@ -1,61 +1,56 @@
-const data = {
-  data: [
-    {
-      id: "0",
-      name: "John",
-    },
-    {
-      id: "1",
-      name: "Alex",
-    },
-    {
-      id: "2",
-      name: "Mark",
-    },
-  ],
-};
+const User = require('../models/user');
+const bcryptjs = require('bcryptjs');
+const { userValidator } = require('../middleware/userValidator')
 
 const getUsers = (req, res) => {
-  res.json({
-    data,
-    extra: "from controller!"
-  });
+  res.send('Hola');
 };
 
-const getUserByParamsID = (req, res) => {
-  const id = req.params.id;
-  console.log(id);
-  const fetchedUser = data.data.filter((el) => el.id === id)[0];
-  console.log(fetchedUser);
-  if (fetchedUser) {
-    res.json({
-      ok: true,
-      user: fetchedUser,
-      extra: "from controller!"
-    });
-  } else {
-    res.status(404).json({
+const getUserByParamsID = (req, res) => {};
+
+const addUser = async (req, res) => {
+
+  // Solo agarrar campos necesarios, ignoramos la basura
+  const { name, email, password, img = 'none' } = req.body;
+  const stagedUser = {name, email, password}
+
+  // Validación de errores en la request
+  const errors = await userValidator(stagedUser)
+  if (errors) {
+    res.status(400).json({
       ok: false,
-      message: "User with id " + id + " not found",
-      extra: "from controller!"
-    });
+      errors,
+      receivedData: { name, email, password, img }
+    })
+    return
   }
-};
+  // Verificar si el correo existe
+  const emailExists = await User.findOne({ email });
 
-const addUser = (req, res) => {
-  const name = req.body.name;
-  const newId = data.data.length.toString();
-  const newUser = {
-    ...req.body,
+  if (emailExists) {
+    res.status(400).json({
+      code: 'error/email-not-unique',
+      message: 'Este email ya esta registrado.',
+    });
+    return
+  }
+  // Encriptación de contraseña
+  const salt = bcryptjs.genSaltSync();
+  const hashedPassword = bcryptjs.hashSync(password, salt);
+  const sanitizedUser = {
     name,
-    id: newId,
+    email,
+    password: hashedPassword,
+    img,
   };
-  data.data.push(newUser);
-  res.status(200).json({
+  const newUser = new User(sanitizedUser);
+  // Se guarda en la DB
+  await newUser.save();
+  res.status(201).json({
     ok: true,
-    message: "User with id " + newId + " created",
-    user: newUser,
-    extra: "from controller!"
+    id: newUser._id,
+    name: newUser.name,
+    email: newUser.email,
   });
 };
 
