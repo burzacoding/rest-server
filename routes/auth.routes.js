@@ -61,18 +61,3 @@ router.post("/googlesignin", checkGooglesigninMiddleware, async (req, res) => {
 });
 
 module.exports = router;
-
-// {
-//   "web": {
-//     "client_id": "1072964576793-2f424uovm9ciiqqo1gjhkcn3tat093g6.apps.googleusercontent.com",
-//     "project_id": "dev-platubi",
-//     "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-//     "token_uri": "https://oauth2.googleapis.com/token",
-//     "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-//     "client_secret": "3-qRLBRuPQLYbqXRtnPdIxj_",
-//     "javascript_origins": [
-//       "http://localhost:3040",
-//       "https://rest-server-burzacoding.herokuapp.com"
-//     ]
-//   }
-// }
