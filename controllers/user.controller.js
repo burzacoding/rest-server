@@ -24,21 +24,21 @@ const getUserByParamsID = (req, res) => {};
 
 const addUser = async (req, res) => {
   // Solo agarrar campos necesarios, ignoramos la basura
-  const { name, email, password, img = "none" } = req.body;
-  const stagedUser = { name, email, password };
+  // const { name, email, password, img = "none" } = req.body;
+  const stagedUser = res.locals.stagedUser;
 
   // Validación de errores en la request
-  const errors = await userValidator(stagedUser);
-  if (errors) {
-    res.status(400).json({
-      ok: false,
-      errors,
-      receivedData: { name, email, password, img },
-    });
-    return;
-  }
+  // const errors = await userValidator(stagedUser);
+  // if (errors) {
+  //   res.status(400).json({
+  //     ok: false,
+  //     errors,
+  //     receivedData: { name, email, password, img },
+  //   });
+  //   return;
+  // }
   // Verificar si el correo existe
-  const emailExists = await User.findOne({ email });
+  const emailExists = await User.findOne({ email: stagedUser.email });
 
   if (emailExists) {
     res.status(400).json({

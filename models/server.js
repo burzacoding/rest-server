@@ -1,7 +1,10 @@
 const express = require('express');
 const path = require('path');
 const cors = require('cors');
-const router = require('../routes/user.routes');
+const routerApi = require('../routes/api.routes');
+const routerAuth = require('../routes/auth.routes');
+const routerProducts = require('../routes/products.routes');
+const routerCategory = require('../routes/categories.routes');
 const { dbConnection } = require('../db/config');
 
 class Server {
@@ -30,11 +33,13 @@ class Server {
     this.app.use(express.json());
     this.app.use(cors());
     this.app.use(express.static(path.join(this.dirname, 'public')));
-    console.log('Middlewares started');
   }
 
   routes() {
-    this.app.use('/api', router);
+    this.app.use('/api', routerApi);
+    this.app.use('/auth', routerAuth);
+    this.app.use('/products', routerProducts)
+    this.app.use('/cat', routerCategory);
     this.app.get('/', (req, res) => {
       res.sendFile(this.dirname + '/public/index.html');
     });
