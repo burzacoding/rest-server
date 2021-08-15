@@ -1,17 +1,58 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="/css/style.css">
-  <title>Acceso denegado</title>
-</head>
-<body>
-  <div class="main">
-    <div class="denied">
-      <h1 class="title">Acceso denegado</h1>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="google-signin-client_id"
+      content="982473445324-n1j532cnjkdmg62r3snsl3gtpojemdbg.apps.googleusercontent.com"
+    />
+    <link rel="stylesheet" href="/css/style.css" />
+    <title>Google Sign In</title>
+  </head>
+  <body>
+    <div class="main">
+      <div class="denied">
+        <h1 class="title">Google Sign In</h1>
+        <br />
+        <br />
+        <div class="g-signin2" data-onsuccess="onSignIn"></div>
+        <br />
+        <br />
+        <a href="#" onclick="signOut();">Sign out</a>
+        <script>
+          function signOut() {
+            var auth2 = gapi.auth2.getAuthInstance();
+            auth2.signOut().then(function () {
+              console.log("User signed out.");
+            });
+          }
+        </script>
+      </div>
     </div>
-  </div>
-</body>
+  </body>
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+  <script>
+
+    var url = (window.location.host.includes('localhost')) ? 'http://localhost:3040/auth/googlesignin' : 'https://rest-server-burzacoding.herokuapp.com/auth/googlesignin'
+
+    function onSignIn(googleUser) {
+      var profile = googleUser.getBasicProfile();
+      console.log("ID: " + profile.getId()); // Do not send to your backend! Use an ID token instead.
+      console.log("Name: " + profile.getName());
+      console.log("Image URL: " + profile.getImageUrl());
+      console.log("Email: " + profile.getEmail()); // This is null if the 'email' scope is not present.
+
+      var id_token = googleUser.getAuthResponse().id_token;
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          "Content-Type" : "application/json",
+          "x-googlesignin-token": id_token
+        }
+      }).then(res => res.json())
+      .then(console.log);
+    }
+  </script>
 </html>
