@@ -4,19 +4,25 @@ const {
   getSingleCategory,
   createCategory,
   updateCategory,
-  deleteCategory
+  deleteCategory,
 } = require("../controllers/category.controller");
+const { isAdminMiddleware } = require("../middleware/isAdmin");
+const { validateJWT } = require("../middleware/jwtValidator");
 
 const router = Router();
 
-router.get("/all", getCategories);
+// PUBLIC API
 
-router.get("/one/:id", getSingleCategory);
+router.get("/", getCategories);
 
-router.post("/add", createCategory);
+router.get("/:id", getSingleCategory);
 
-router.put("/one/:id", updateCategory);
+// PRIVATE API
 
-router.delete("/one/:id", deleteCategory);
+router.post("/", [validateJWT, isAdminMiddleware], createCategory);
+
+router.put("/:id", [validateJWT, isAdminMiddleware], updateCategory);
+
+router.delete("/:id", [validateJWT, isAdminMiddleware], deleteCategory);
 
 module.exports = router;

@@ -6,17 +6,33 @@ const {
   updateProduct,
   deleteProduct,
 } = require("../controllers/products.controller");
+const { isAdminMiddleware } = require("../middleware/isAdmin");
+const { validateJWT } = require("../middleware/jwtValidator");
 
 const router = Router();
 
-router.get("/all", getProducts);
 
-router.get("/one/:id", getSingleProduct);
+// PUBLIC API
 
-router.post("/add", createProduct);
+router.get("/", getProducts);
 
-router.put("/one/:id", updateProduct);
+router.get("/:id", getSingleProduct);
 
-router.delete("/one/:id", deleteProduct);
+// PRIVATE API
+
+router.post("/", [
+  validateJWT,
+  isAdminMiddleware
+], createProduct);
+
+router.put("/:id",[
+  validateJWT,
+  isAdminMiddleware
+], updateProduct);
+
+router.delete("/:id",[
+  validateJWT,
+  isAdminMiddleware
+], deleteProduct);
 
 module.exports = router;

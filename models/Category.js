@@ -4,9 +4,6 @@ const ErrorCodes = {
   name: {
     required: "The name is required.",
   },
-  createdBy: {
-    required: "The createdBy is required.",
-  }
 }
 
 const CategorySchema = Schema({
@@ -21,9 +18,19 @@ const CategorySchema = Schema({
   createdBy : {
     type : Schema.Types.ObjectId,
     ref : "User",
-    required: [true, ErrorCodes.createdBy.required]
   }
-
 });
+
+CategorySchema.methods.getCreator = function() {
+  return this.createdBy
+}
+
+CategorySchema.methods.toJSON = function () {
+  const { __v, _id: uid, ...rest} = this.toObject();
+  return {
+    ...rest,
+    uid
+  }
+}
 
 module.exports = model('Category', CategorySchema)

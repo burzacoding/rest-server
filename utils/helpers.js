@@ -2,7 +2,6 @@ const jwt = require("jsonwebtoken");
 const { OAuth2Client } = require("google-auth-library");
 
 const generateToken = async (uid = "") => {
-  console.log(process.env.JWT_KEY);
   return new Promise((resolve, reject) => {
     const payload = { uid };
     jwt.sign(

@@ -25,7 +25,7 @@ const validateJWT = async (req, res, next) => {
         .send("Error 401 Unauthorized... el token no es valido");
     }
   } else {
-    return res.status(401).send("Error 401 Unauthorized... el token no existe");
+    return res.status(401).send("Error 401 Unauthorized");
   }
 };
 

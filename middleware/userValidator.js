@@ -98,4 +98,5 @@ const userAuthValidatorMiddleware = async (req, res, next) => {
 module.exports = {
   userApiValidatorMiddleware,
   userAuthValidatorMiddleware,
+  getStagedData
 };

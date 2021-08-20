@@ -5,6 +5,7 @@ const routerApi = require('../routes/api.routes');
 const routerAuth = require('../routes/auth.routes');
 const routerProducts = require('../routes/products.routes');
 const routerCategory = require('../routes/categories.routes');
+const routerSearch = require('../routes/search.routes');
 const { dbConnection } = require('../db/config');
 
 class Server {
@@ -40,6 +41,7 @@ class Server {
     this.app.use('/auth', routerAuth);
     this.app.use('/products', routerProducts)
     this.app.use('/cat', routerCategory);
+    this.app.use('/search', routerSearch);
     this.app.get('/', (req, res) => {
       res.sendFile(this.dirname + '/public/index.html');
     });
