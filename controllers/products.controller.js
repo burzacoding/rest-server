@@ -6,7 +6,8 @@ const getProducts = async (req, res) => {
   const products = Product.find({ active: true })
     .skip(Number(page * limit))
     .limit(Number(limit))
-    .populate('categories', 'name');
+    .populate("categories", "name")
+    .populate("createdBy", "name");
   const total = Product.countDocuments({ active: true });
   const resp = await Promise.all([products, total]);
   res.status(200).json({
@@ -19,26 +20,48 @@ const getProducts = async (req, res) => {
 
 const getSingleProduct = async (req, res) => {
   const id = req.params.id;
-  const product = await Product.findOne({ _id: id });
-  if (product) {
-    return res.status(200).json({
-      results: product ? [product] : [],
-    });
-  } else {
-    return res.status(404).json({
-      message: "Product not found",
+  try {
+    const product = await Product.findOne({ _id: id });
+    if (product) {
+      return res.status(200).json({
+        results: product ? [product] : [],
+      });
+    } else {
+      return res.status(404).json({
+        message: "Product not found",
+      });
+    }
+  } catch (err) {
+    res.status(404).json({
+      message: "Product with id " + id + " not found",
     });
   }
 };
 
 const createProduct = async (req, res) => {
   try {
-    const { name, price, description, available = false, categories } = getStagedData(
-      req,
-      ["name", "price", "description", "available", "categories"]
-    );
+    const {
+      name,
+      price,
+      description,
+      available = false,
+      categories,
+    } = getStagedData(req, [
+      "name",
+      "price",
+      "description",
+      "available",
+      "categories",
+    ]);
     const userId = res.locals.user._id;
-    const product = new Product({ name, createdBy: userId, price, description, available, categories}).populate('categories', 'name');
+    const product = new Product({
+      name,
+      createdBy: userId,
+      price,
+      description,
+      available,
+      categories,
+    }).populate("categories", "name");
     const newProduct = await product.save();
     res.json({
       message: "Product created",
@@ -47,7 +70,7 @@ const createProduct = async (req, res) => {
   } catch (err) {
     res.status(400).json({
       message: err.message,
-    })
+    });
   }
 };
 
