@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const fs = require('fs');
 const { OAuth2Client } = require("google-auth-library");
 
 const generateToken = async (uid = "") => {
@@ -33,12 +34,14 @@ const googleVerify = async (idToken = "") => {
   return { name, email, picture } = payload;
 };
 
+const getExtension = (filename) => {
+  const destruct = filename.split('.');
+  return destruct[destruct.length - 1]
+}
+
+
 module.exports = {
   generateToken,
   googleVerify,
+  getExtension
 };
-
-// {
-//   algorithm: "HS512",
-//   expiresIn: '14 days'
-// }
