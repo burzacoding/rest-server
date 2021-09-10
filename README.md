@@ -11,7 +11,7 @@
 
 # If I had more time I would change this
 
- - I would improve the middlewares structure to make them more modular and reusable [as I did in this othe project](https://github.com/burzacoding/ts-rest-server-sql/blob/master/middlewares/testMiddleware.ts).
+ - I would improve the middlewares structure to make them more modular and reusable [as I did in this other project](https://github.com/burzacoding/ts-rest-server-sql/blob/master/middlewares/testMiddleware.ts).
  - Create a frontend to better show this project.
  - Improve the overall structure of files for better quality of code and code readability.
 
