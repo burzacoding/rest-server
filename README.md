@@ -1,8 +1,6 @@
 # How I worked on this project
 
-My goal was to create a good backend structure, to learn MongoDB, learn JWT and to write middlewares.
-
- - I built this 
+ - My goal was to create a good backend structure, to learn MongoDB, learn JWT and to write middlewares.
  - I tested the endpoints with a http client (Insomnia).
 
 # How to navigate this project
